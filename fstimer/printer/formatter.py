@@ -23,14 +23,21 @@ Format results for printing
 """
 
 import os
+from enum import Enum
 from fstimer.printer.printcsv import CSVPrinter
 from fstimer.printer.printcsvlaps import CSVPrinterLaps
 from fstimer.printer.printhtml import HTMLPrinter
 from fstimer.printer.printhtmllaps import HTMLPrinterLaps
+from fstimer.printer.printexcel import ExcelPrinter
 from collections import defaultdict
 from fstimer.time_ops import time_format, time_parse, time_diff
 
-def print_times(pytimer, use_csv):
+class OutputFormat(Enum):
+     HTML = 1
+     CVS = 2
+     EXCEL = 3
+
+def print_times(pytimer, outputFormat):
     '''print times to files'''
     # Figure out what the columns will be.
     cols = get_results_columns(pytimer)
@@ -38,7 +45,7 @@ def print_times(pytimer, use_csv):
     # Get the list of different things we will rank by
     ranking_keys = set(pytimer.rankings.values())
     # Get the printer
-    printer = get_printer(pytimer, cols, use_csv, True)
+    printer = get_printer(pytimer, cols, outputFormat, True)
     # Build the results
     ranked_results = {}
     for ranking_key in ranking_keys:
@@ -60,7 +67,10 @@ def print_startsheets(pytimer, use_csv):
     col_fns = get_col_fns(pytimer, cols)
     ranking_keys = set(['ID'])
     rankings = defaultdict(lambda: 'ID')
-    printer = get_printer(pytimer, cols, use_csv, False)
+    if (use_csv):
+        printer = get_printer(pytimer, cols, OutputFormat.CVS, False)
+    else:
+        printer = get_printer(pytimer, cols, OutputFormat.HTML, False)
     # Build the results
     ranked_results = {}
     for ranking_key in ranking_keys:
@@ -92,19 +102,26 @@ def gen_printouts(timing_dict, fieldsdic, divisions, rankings, path, printer,
     for div in divresults:
         divresults[div] += printer.cat_table_footer(div)
     # now save to files
-    scratch_file = os.path.join(path,
-                                fname_overall + '.' + printer.file_extension())
-    with open(scratch_file, 'w', encoding='utf-8') as scratch_out:
-        scratch_out.write(printer.header())
-        scratch_out.write(scratchresults)
-        scratch_out.write(printer.footer())
-    div_file = os.path.join(path,
-                                fname_cat + '.' + printer.file_extension())
-    with open(div_file, 'w', encoding='utf-8') as div_out:
-        div_out.write(printer.header())
-        for div in divisions:
-            div_out.write(divresults[div[0]])
-        div_out.write(printer.footer())
+    if printer.printer_creates_own_file:
+        scratch_file = os.path.join(path,fname_overall + '.' + printer.file_extension())
+        printer.set_own_filename(scratch_file)
+        printer.header()
+        printer.print_csv_results(scratchresults)
+        printer.footer()
+    else:
+        scratch_file = os.path.join(path,
+                                    fname_overall + '.' + printer.file_extension())
+        with open(scratch_file, 'w', encoding='utf-8') as scratch_out:
+            scratch_out.write(printer.header())
+            scratch_out.write(scratchresults)
+            scratch_out.write(printer.footer())
+        div_file = os.path.join(path,
+                                    fname_cat + '.' + printer.file_extension())
+        with open(div_file, 'w', encoding='utf-8') as div_out:
+            div_out.write(printer.header())
+            for div in divisions:
+                div_out.write(divresults[div[0]])
+            div_out.write(printer.footer())
 
 def get_col_fns(pytimer, cols):
     # Prepare functions for computing each column
@@ -131,13 +148,19 @@ def get_col_fns(pytimer, cols):
         col_fns.append(text)
     return col_fns
 
-def get_printer(pytimer, cols, use_csv, print_place):
+#def get_printer(pytimer, cols, use_csv, print_place):
+def get_printer(pytimer, cols, outputFormat, print_place):
     # choose the right Printer Class
-    if use_csv:
+    if outputFormat == OutputFormat.CVS:
         if pytimer.numlaps > 1:
             printer_class = CSVPrinterLaps
         else:
             printer_class = CSVPrinter
+    elif outputFormat == OutputFormat.EXCEL:
+        if pytimer.numlaps > 1:
+            printer_class = CSVPrinterLaps
+        else:
+            printer_class = ExcelPrinter
     else:
         if pytimer.numlaps > 1:
             printer_class = HTMLPrinterLaps

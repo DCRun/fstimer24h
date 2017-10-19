@@ -33,7 +33,7 @@ from gi.repository import Pango
 from collections import defaultdict, Counter
 from fstimer.gui.util_classes import MsgDialog
 from fstimer.gui.util_classes import GtkStockButton
-from fstimer.printer.formatter import print_times
+from fstimer.printer.formatter import print_times, OutputFormat
 from fstimer.time_ops import time_format, time_sum, time_diff
 
 class MergeError(Exception):
@@ -155,6 +155,10 @@ class TimingWin(Gtk.Window):
         menu_savecsv.connect_object("activate", self.print_csv, pytimer)
         menu_savecsv.show()
         options_menu.append(menu_savecsv)
+        menu_saveexcel = Gtk.MenuItem('Save results to EXCEL')
+        menu_saveexcel.connect_object("activate", self.print_excel, pytimer)
+        menu_saveexcel.show()
+        options_menu.append(menu_saveexcel)
         menu_resume = Gtk.MenuItem('Load saved timing session')
         menu_resume.connect_object("activate", self.resume_times, None, False) #False is for not merging
         menu_resume.show()
@@ -682,5 +686,14 @@ class TimingWin(Gtk.Window):
         # Display message that was successful
         md = MsgDialog(pytimer.timewin, 'information', ['ok'], 'Success!',
                        "Results saved to HTML.")
+        md.run()
+        md.destroy()
+
+    def print_excel(self, pytimer):
+        #res = print_times(pytimer, True)
+        res = print_times(pytimer, OutputFormat.EXCEL)  # True is to print csv OutputFormat
+        # Display message that was successful
+        md = MsgDialog(pytimer.timewin, 'information', ['ok'], 'Success!',
+                       "Results saved to EXCEL.")
         md.run()
         md.destroy()

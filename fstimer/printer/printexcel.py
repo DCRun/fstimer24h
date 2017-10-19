@@ -18,87 +18,80 @@
 
 #The author/copyright holder can be contacted at bletham@gmail.com
 
-'''Printing infrastructure for the fsTimer package'''
+'''Printer class for csv files for single lap races'''
 
-class Printer(object):
-    '''Base class for an fstimer printer.
-       Defines an API for implementation of real printers'''
+import os
+import xlsxwriter
+from fstimer.printer.printer import Printer
+
+class ExcelPrinter(Printer):
+    '''Printer class for csv files for single lap races'''
+
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXY"
 
     def __init__(self, fields, categories, print_place):
         '''constructor
            @type fields: list
            @param fields: fields of the output
            @type categories: list
-           @param categories: existing categories
-           @type print_place: boolean
-           @param print_place: print place'''
-        self.fields = fields
-        self.categories = categories
-        self.print_place = print_place
-        self.place = 1
-        self.cat_place = {cat:1 for cat in self.categories}
+           @param categories: existing categories'''
+        super(ExcelPrinter, self).__init__(fields, categories, print_place)
         self.row_start = ''
-        self.row_delim = ''
-        self.row_end = ''
+        self.row_delim = ','
+        self.row_end = '\n'
 
     def set_own_filename(self, filename):
-        return
+        self.filename = filename
 
     def printer_creates_own_file(self):
-        return False
-
-    def print_csv_results(self, results):
-        return
+        return True
 
     def file_extension(self):
         '''returns the file extension to be used for files
            containing data from this printer'''
-        return ''
+        return 'xlsx'
 
     def header(self):
-        '''Returns the header of the printout'''
+        self.workbook = xlsxwriter.Workbook(self.filename)
+        self.worksheet = self.workbook.add_worksheet()
+        #self.worksheet.write('A1', 'Hello world')
         return ''
+    
+    def print_csv_results(self, results):
+        lines = results.split(self.row_end)
+        lineCount = 1
+        for line in lines:
+          cols = line.split(",")
+          colCount = 0
+          for col in cols:
+              letter = self.alphabet[colCount]
+              cell = letter + str(lineCount)
+              self.worksheet.write(cell, col)
+              print(cell + " " + col)
+              colCount = colCount + 1
+          #  
+          #  
+          #  print(cell + " = " + line)
+          #  colCount = colCount + 1
+          lineCount = lineCount + 1
+
 
     def footer(self):
-        '''Returns the footer of the printout'''
+        self.workbook.close()
         return ''
 
     def scratch_table_header(self):
         '''Returns the header of the printout for scratch results'''
-        return ''
-
-    def scratch_table_footer(self):
-        '''Returns the header of the printout for scratch results'''
-        return ''
+        return 'Place,' + ','.join(self.fields) + '\n'
 
     def cat_table_header(self, category):
         '''Returns the header of the printout for results by category.
            @type category: string
            @param category: name of the category handled by the table'''
-        return ''
+        return category + '\n' + self.scratch_table_header()
 
     def cat_table_footer(self, category):
         '''Returns the footer of the printout for results by category.
            @type category: string
            @param category: name of the category handled by the table'''
-        return ''
-    
-    def common_entry(self, row):
-        return self.row_delim.join(row)
-
-    def scratch_entry(self, row, category=None):
-        '''Returns the printout of the entry of a given runner
-           in the scratch results'''
-        return (self.row_start + self.get_place_str(category) +
-                self.common_entry(row) + self.row_end)
-
-    def get_place_str(self, category):
-        if not self.print_place:
-            return ''
-        if category is None:
-            place = str(self.place)
-            self.place += 1
-        else:
-            place = str(self.cat_place[category])
-            self.cat_place[category] += 1
-        return place + self.row_delim
+        return '\n'
