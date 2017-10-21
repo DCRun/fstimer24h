@@ -372,6 +372,10 @@ class PyTimer(object):
         '''import pre-registration from a csv'''
         self.importpreregwin = fstimer.gui.importprereg.ImportPreRegWin(self.path, self.fields, self.fieldsdic)
 
+    def import_prereg_excel(self, jnk_unused):
+        '''import pre-registration from a excel'''
+        self.importpreregwin = fstimer.gui.importprereg.ImportPreRegWin(self.path, self.fields, self.fieldsdic)
+
     def handle_preregistration(self, jnk_unused):
         '''handles preregistration'''
         self.preregistrationwin = fstimer.gui.preregister.PreRegistrationWin(self.path, self.set_registration_file, self.handle_registration)
