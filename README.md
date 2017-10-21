@@ -1,4 +1,4 @@
-fstimer
+fstimer(Excel support)
 =======
 
 See fstimer.org for more information and original version
