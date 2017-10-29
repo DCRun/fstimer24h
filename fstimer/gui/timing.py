@@ -68,12 +68,14 @@ class TimingWin(Gtk.Window):
         self.set_border_width(10)
         self.set_size_request(450, 450)
         # We will put the timing info in a liststore in a scrolledwindow
-        self.timemodel = Gtk.ListStore(str, str)
+        self.timemodel = Gtk.ListStore(str, str, str)
         # We will put the liststore in a treeview
         self.timeview = Gtk.TreeView()
         column = Gtk.TreeViewColumn('ID', Gtk.CellRendererText(), text=0)
         self.timeview.append_column(column)
         column = Gtk.TreeViewColumn('Time', Gtk.CellRendererText(), text=1)
+        self.timeview.append_column(column)
+        column = Gtk.TreeViewColumn('Offset', Gtk.CellRendererText(), text=2)
         self.timeview.append_column(column)
         #An extra column if it is a handicap race
         if self.projecttype == 'handicap':
@@ -640,14 +642,21 @@ class TimingWin(Gtk.Window):
         # it is actually a result. (or a pass, which we treat as a result)
         # prepend to raw
         self.rawtimes['ids'].insert(0, txt)
+        #do we have an entry in the timing dic?
+        startoffset = 0
+        if (self.timing[txt]):
+            row = self.timing[txt]
+            #print("Found entry: " + str(row.get('ID')))
+            startoffset = -10
         # add to the appropriate spot on timemodel.
         if self.offset > 0:
             # we have a time in the store to assign it to
              # put it in the last available time slot
             self.timemodel.set_value(self.timemodel.get_iter(self.offset-1), 0, txt)
+            self.timemodel.set_value(self.timemodel.get_iter(self.offset-1), 2, str(startoffset))
         else:
             # It will just be added to the buffer of IDs by prepending to timemodel
-            self.timemodel.prepend([txt, ''])
+            self.timemodel.prepend([txt, '', str(startoffset)])
         self.offset -= 1
         for jnk_unused in range(timemarks):
             self.new_blank_time()
@@ -665,7 +674,7 @@ class TimingWin(Gtk.Window):
         self.rawtimes['times'].insert(0, t) #we prepend to rawtimes, just as we prepend to timemodel
         if self.offset >= 0:
             # No IDs in the buffer, so just prepend it to the liststore.
-            self.timemodel.prepend(['', t])
+            self.timemodel.prepend(['', t, ''])
         elif self.offset < 0:
             # IDs in the buffer, so add the time to the oldest ID
             # put it in the last available ID slot

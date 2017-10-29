@@ -102,6 +102,7 @@ class PreTimeWin(Gtk.Window):
                 with open(filename, 'r', encoding='utf-8') as fin:
                   a = json.load(fin)
                 for reg in a.keys():
+                  #print("Insert: " + reg)
                   self.timing[reg].update(a[reg])
                 self.pretimefilelabel.set_markup('<span color="blue">'+os.path.basename(filename)+' loaded.</span>')
             except (IOError, ValueError):
