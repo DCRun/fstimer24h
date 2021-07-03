@@ -36,6 +36,8 @@ from fstimer.gui.util_classes import GtkStockButton
 from fstimer.printer.formatter import print_times, OutputFormat
 from fstimer.time_ops import time_format, time_sum, time_diff
 
+import requests
+
 class MergeError(Exception):
     '''Exception used in case of merging error'''
     pass
@@ -56,6 +58,16 @@ class TimingWin(Gtk.Window):
         self.rawtimes = pytimer.rawtimes
         self.timing = pytimer.timing
         self.numlaps = pytimer.numlaps
+        # SH: TODO get value from settings (pytimer)
+        self.laplength = 6.0
+        self.trackerapi = "http://24hcr.dirtychurchrun.de/add-lap.php"
+        self.username = ""
+        self.password = ""
+        userAndPass = b64encode((self.username + ":" + self.password).encode()).decode("ascii")
+        self.authorisation = "Basic %s" % userAndPass
+        self.headers = {'Content-type': 'x-www-form-urlencoded', 'Accept': '*/*', 
+                   "Accept-Encoding": 'gzip, deflate, br', "Authorization":self.authorisation}
+        
         self.wineditblocktime = None
         self.winedittime = None
         self.t0win = None
@@ -89,6 +101,20 @@ class TimingWin(Gtk.Window):
             column = Gtk.TreeViewColumn('Completed laps', renderer)
             column.set_cell_data_func(renderer, self.print_completed_laps)
             self.timeview.append_column(column)
+        
+        # SH: add total money
+        if self.numlaps > 1:
+            renderer = Gtk.CellRendererText()
+            column = Gtk.TreeViewColumn('Total donation', renderer)
+            column.set_cell_data_func(renderer, self.print_total_donation)
+            self.timeview.append_column(column)
+        
+        # SH: add Name
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Name', renderer)
+        column.set_cell_data_func(renderer, self.print_name)
+        self.timeview.append_column(column)
+            
         self.timeview.set_model(self.timemodel)
         self.timeview.connect('size-allocate', self.scroll_times)
         treeselection = self.timeview.get_selection()
@@ -227,6 +253,33 @@ class TimingWin(Gtk.Window):
         else:
             renderer.set_property('text', '')
 
+	# SH: print total donation
+    def print_total_donation(self, column, renderer, model, itr, data):
+        '''computes the total donation'''
+        bibid, st = model.get(itr, 0, 1)
+        if self.timing[bibid]['Donation']:
+            try:
+                donation = int(self.lapcounter[bibid]) * float(self.timing[bibid]['Donation']) * self.laplength
+                renderer.set_property('text', str(donation))
+            except AttributeError:
+                #Donation is present but is not formatted correctly.
+                renderer.set_property('text', 'Error')
+        else:
+            renderer.set_property('text', 'Donation NN')
+    
+    	# SH: print total donation
+    def print_name(self, column, renderer, model, itr, data):
+        '''prints name'''
+        bibid, st = model.get(itr, 0, 1)
+        if self.timing[bibid]['Donation']:
+            try:
+                name = self.timing[bibid]['First name'] + ' ' + self.timing[bibid]['Last name']
+                renderer.set_property('text', str(name))
+            except AttributeError:
+                renderer.set_property('text', 'Error')
+        else:
+            renderer.set_property('text', 'Name NN')
+            
     def print_completed_laps(self, column, renderer, model, itr, data):
         '''computes number of laps completed by this (registered) racer'''
         bibid, st = model.get(itr, 0, 1)
@@ -629,6 +682,12 @@ class TimingWin(Gtk.Window):
                 self.racers_in[i] += 1
                 break
 
+    def submit_lap(self, ID):
+        dataDict = {"orderid": self.timing[ID]['OrderID'],
+                    "laps": self.lapcounter[ID]}
+        response = requests.post(self.trackerapi, data=dataDict, headers=self.headers, verify=False)
+        jsonresponse = json.loads(response.content.decode('utf-8'))
+        
     def record_time(self, jnk_unused):
         '''Handles a hit on enter in the entry box.
            An ID with times in the buffer gives the oldest (that is, fastest)

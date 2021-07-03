@@ -286,7 +286,7 @@ class ImportPreRegWin(Gtk.Window):
                 print("Reading Exel from: " + filename)
                 self.csvreg = []
                 self.wb = load_workbook(filename=filename, read_only=True)
-                self.ws = self.wb['Sheet1']
+                self.ws = self.wb[self.wb.sheetnames[0]]
                 excel_fields = []
                 rowCount = 0
                 for row in self.ws.rows:
