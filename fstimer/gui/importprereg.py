@@ -58,11 +58,11 @@ class ImportPreRegWin(Gtk.Window):
         self.set_size_request(600, 400)
         # Start with some intro text.
         label1 = Gtk.Label(
-            label=('Select a pre-registration csv or Excel file to import.\n\n'
+            label=(_('Select a pre-registration csv or Excel file to import.\n\n'
                    'If the spreadsheet has accented or non-Latin characters, it must be in utf-8,\n'
-                   'see Section 2.2 of the documentation for instructions.'))
+                   'see Section 2.2 of the documentation for instructions.')))
         #Continue to the load file.
-        btnFILE = GtkStockButton('open',"Open")
+        btnFILE = GtkStockButton('open',_("Open"))
         ## Textbuffer
         textbuffer = Gtk.TextBuffer()
         try:
@@ -86,7 +86,7 @@ class ImportPreRegWin(Gtk.Window):
         hbox2.pack_start(btnFILE, False, False, 0)
         hbox2.pack_start(btn_algn, True, True, 0)
         ## buttons
-        btnOK = GtkStockButton('ok',"OK")
+        btnOK = GtkStockButton('ok',_("OK"))
         btnOK.connect('clicked', lambda b: self.hide())
         cancel_algn = Gtk.Alignment.new(0, 0, 1, 0)
         hbox3 = Gtk.HBox(False, 10)
@@ -108,18 +108,18 @@ class ImportPreRegWin(Gtk.Window):
         self.advancedwin.set_transient_for(self)
         self.advancedwin.set_modal(True)
         if (importFormat==ImportFormat.EXCEL):
-            self.advancedwin.set_title('fsTimer - EXCEL import')
+            self.advancedwin.set_title(_('fsTimer - EXCEL import'))
         else:
-            self.advancedwin.set_title('fsTimer - CSV import')
+            self.advancedwin.set_title(_('fsTimer - CSV import'))
         self.advancedwin.set_position(Gtk.WindowPosition.CENTER)
         self.advancedwin.set_border_width(20)
         self.advancedwin.set_size_request(600, 400)
         self.advancedwin.connect('delete_event', lambda b, jnk_unused: self.advancedwin.hide())
         # top label
         if (importFormat==ImportFormat.EXCEL):
-            toplabel = Gtk.Label("For each field, specify the corresponding EXCEL column.\n")
+            toplabel = Gtk.Label(_("For each field, specify the corresponding EXCEL column.\n"))
         else:
-            toplabel = Gtk.Label("For each field, specify the corresponding CSV column.\n")
+            toplabel = Gtk.Label(_("For each field, specify the corresponding CSV column.\n"))
         # Treeview with 3 columns : field, combobox and free text
         self.fieldview = Gtk.TreeView()
         self.fieldview.set_grid_lines(Gtk.TreeViewGridLines.BOTH)

@@ -24,6 +24,7 @@ import os
 from os.path import normpath, join, dirname, abspath
 import fstimer.gui
 from fstimer.gui.util_classes import GtkStockButton
+import gettext
 
 class IntroWin(Gtk.Window):
     '''Handles an introduction window to select/create a project'''
@@ -34,7 +35,7 @@ class IntroWin(Gtk.Window):
         self.modify_bg(Gtk.StateType.NORMAL, fstimer.gui.bgcolor)
         icon_fname = normpath(join(dirname(abspath(__file__)),'../data/icon.png'))
         self.set_icon_from_file(icon_fname)
-        self.set_title('fsTimer')
+        self.set_title('fsTimer (24HCR edition)')
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_border_width(20)
         self.connect('delete_event', Gtk.main_quit)
@@ -46,7 +47,7 @@ class IntroWin(Gtk.Window):
         logo.set_from_file(normpath(join(dirname(abspath(__file__)),'../data/fstimer_logo.png')))
         # Welcome text
         label0 = Gtk.Label(label='')
-        label = Gtk.Label('Select an existing project, or begin a new project.')
+        label = Gtk.Label(_('Select an existing project, or begin a new project.'))
         # A combobox to select the project
         combobox = Gtk.ComboBoxText()
         projectlist = [' -- Select an existing project --']

@@ -45,7 +45,7 @@ class PreRegistrationWin(Gtk.Window):
         self.connect('delete_event', lambda b, jnk: self.hide())
         self.set_border_width(10)
         # Start with some intro text.
-        prereglabel1 = Gtk.Label('Give a unique number to each computer used for registration.\nSelect a pre-registration file, if available.')
+        prereglabel1 = Gtk.Label(_('Give a unique number to each computer used for registration.\nSelect a pre-registration file, if available.'))
         # Continue to the spinner
         preregtable = Gtk.Table(3, 2, False)
         preregtable.set_row_spacings(5)
@@ -55,8 +55,8 @@ class PreRegistrationWin(Gtk.Window):
         regid_btn = Gtk.SpinButton(digits=0, climb_rate=0)
         regid_btn.set_adjustment(regid)
         preregtable.attach(regid_btn, 0, 1, 0, 1)
-        preregtable.attach(Gtk.Label(label="This computer's registration number"), 1, 2, 0, 1)
-        preregbtnFILE = Gtk.Button('Select pre-registration')
+        preregtable.attach(Gtk.Label(label=_("This computer's registration number")), 1, 2, 0, 1)
+        preregbtnFILE = Gtk.Button(_('Select pre-registration'))
         preregbtnFILE.connect('clicked', self.file_selected)
         preregtable.attach(preregbtnFILE, 0, 1, 2, 3)
         self.preregfilelabel = Gtk.Label(label='')
@@ -82,9 +82,9 @@ class PreRegistrationWin(Gtk.Window):
 
     def file_selected(self, jnk_unused):
         '''Handle selection of a pre-reg file using a filechooser.'''
-        chooser = Gtk.FileChooserDialog(title='Select pre-registration file', parent=self, action=Gtk.FileChooserAction.OPEN, buttons=('Cancel', Gtk.ResponseType.CANCEL, 'OK', Gtk.ResponseType.OK))
+        chooser = Gtk.FileChooserDialog(title=_('Select pre-registration file'), parent=self, action=Gtk.FileChooserAction.OPEN, buttons=('Cancel', Gtk.ResponseType.CANCEL, 'OK', Gtk.ResponseType.OK))
         ffilter = Gtk.FileFilter()
-        ffilter.set_name('Registration files')
+        ffilter.set_name(_('Registration files'))
         ffilter.add_pattern('*_registration_*.json')
         chooser.add_filter(ffilter)
         chooser.set_current_folder(self.path)
@@ -106,7 +106,7 @@ class PreRegistrationWin(Gtk.Window):
         filename = os.path.join(self.path, os.path.basename(self.path)+'_registration_'+str(regid)+'.json')
         if os.path.exists(filename):
             #Raise a warning window
-            md = MsgDialog(self, 'warning', ['ok', 'cancel'], 'Proceed?', "A file with this registration number already exists.\nIf you continue it will be overwritten!")
+            md = MsgDialog(self, 'warning', [_('ok'), _('cancel')], _('Proceed?'), _("A file with this registration number already exists.\nIf you continue it will be overwritten!"))
             resp = md.run()
             md.destroy()
             #Check the result.

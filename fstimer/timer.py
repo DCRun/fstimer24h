@@ -17,6 +17,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #The author/copyright holder can be contacted at bletham@gmail.com
+# Give a unique number
 
 '''Main class of the fsTimer package'''
 
@@ -45,7 +46,7 @@ import fstimer.gui.timing
 from fstimer.printer.formatter import print_startsheets
 from collections import defaultdict
 from fstimer.gui.util_classes import MsgDialog
-
+import gettext
 
 class PyTimer(object):
     '''main class of fsTimer'''

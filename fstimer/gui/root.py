@@ -24,6 +24,7 @@ import fstimer.gui
 import webbrowser, os
 from fstimer.gui.util_classes import GtkStockButton
 from fstimer.gui.util_classes import MenuItemIcon
+import gettext
 
 class RootWin(Gtk.Window):
     '''Handles the root window of the application'''
@@ -45,13 +46,13 @@ class RootWin(Gtk.Window):
         # Generate the menubar
         mb = Gtk.MenuBar()
         helpmenu = Gtk.Menu()
-        helpm = Gtk.MenuItem('Menu')
+        helpm = Gtk.MenuItem(_('Menu'))
         helpm.set_submenu(helpmenu)
-        menuedit = MenuItemIcon('edit', 'Edit project settings', edit_cb, True)
+        menuedit = MenuItemIcon('edit', _('Edit project settings'), edit_cb, True)
         helpmenu.append(menuedit)
-        menuhelp = MenuItemIcon('help', 'Documentation', lambda x: webbrowser.open_new('http://fstimer.org/documentation/documentation_sec2.htm'))
+        menuhelp = MenuItemIcon('help', _('Documentation'), lambda x: webbrowser.open_new('http://fstimer.org/documentation/documentation_sec2.htm'))
         helpmenu.append(menuhelp)
-        menuabout = MenuItemIcon('about', 'About', show_about_cb, self)
+        menuabout = MenuItemIcon('about', _('About'), show_about_cb, self)
         helpmenu.append(menuabout)
         mb.append(helpm)
         ### Frame
@@ -70,22 +71,22 @@ class RootWin(Gtk.Window):
         rootbtnPREREG.connect('clicked', importprereg_cb)
         rootlabelPREREG = Gtk.Label(label='')
         rootlabelPREREG.set_alignment(0, 0.5)
-        rootlabelPREREG.set_markup('Import registration info from spreadsheet.')
-        rootbtnREG = Gtk.Button('Register')
+        rootlabelPREREG.set_markup(_('Import registration info from spreadsheet.'))
+        rootbtnREG = Gtk.Button(_('Register'))
         rootbtnREG.connect('clicked', prereg_cb)
         rootlabelREG = Gtk.Label(label='')
         rootlabelREG.set_alignment(0, 0.5)
-        rootlabelREG.set_markup('Register racer information and assign ID numbers.')
-        rootbtnCOMP = Gtk.Button('Compile')
+        rootlabelREG.set_markup(_('Register racer information and assign ID numbers.'))
+        rootbtnCOMP = Gtk.Button(_('Compile'))
         rootbtnCOMP.connect('clicked', compreg_cb)
         rootlabelCOMP = Gtk.Label(label='')
         rootlabelCOMP.set_alignment(0, 0.5)
-        rootlabelCOMP.set_markup('Compile registration file(s)')
-        rootbtnTIME = Gtk.Button('Time')
+        rootlabelCOMP.set_markup(_('Compile registration file(s)'))
+        rootbtnTIME = Gtk.Button(_('Time'))
         rootbtnTIME.connect('clicked', pretime_cb)
         rootlabelTIME = Gtk.Label(label='')
         rootlabelTIME.set_alignment(0, 0.5)
-        rootlabelTIME.set_markup('Record race times on the day of the race.')
+        rootlabelTIME.set_markup(_('Record race times on the day of the race.'))
         roottable.attach(rootbtnPREREG, 0, 1, 0, 1)
         roottable.attach(rootlabelPREREG, 1, 2, 0, 1)
         roottable.attach(rootbtnREG, 0, 1, 1, 2)
@@ -97,7 +98,7 @@ class RootWin(Gtk.Window):
         rootframe.add(roottable)
         ### Buttons
         roothbox = Gtk.HBox(True, 0)
-        rootbtnQUIT = GtkStockButton('close',"Quit")
+        rootbtnQUIT = GtkStockButton(_('close'),_("Quit"))
         rootbtnQUIT.connect('clicked', Gtk.main_quit)
         roothbox.pack_start(rootbtnQUIT, False, False, 5)
         #Vbox

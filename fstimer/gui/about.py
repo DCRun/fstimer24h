@@ -51,6 +51,6 @@ class AboutWin(Gtk.AboutDialog):
         self.set_license(gpl)
         self.set_authors(['Ben Letham',
                           'Sebastien Ponce',
-                          'Stewart Hamblin'])
+                          'Stewart Hamblin', "Sascha Holzhauer"])
         self.run()
         self.destroy()

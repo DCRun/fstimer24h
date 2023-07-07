@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fstimer24h"
+version = "0.1.0"
+description = "FS Timer for 24HCR"
+authors = ["Sascha Holzhauer <Sascha.Holzhauer@uni-kassel.de>"]
+license = "GPL 3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+openpyxl = "^3.1.2"
+XlsxWriter = "^3.1.2"
+pygobject = "^3.44.1"
+requests = "^2.31.0"
+pandas = "^2.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

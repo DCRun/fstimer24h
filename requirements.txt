@@ -1,0 +1,4 @@
+PyGObject
+openpyxl
+requests
+xlsxwriter

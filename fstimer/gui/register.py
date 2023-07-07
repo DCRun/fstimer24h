@@ -1,5 +1,6 @@
 #fsTimer - free, open source software for race timing.
 #Copyright 2012-15 Ben Letham
+from config.config import password
 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -25,6 +26,14 @@ import os
 import re
 from fstimer.gui.util_classes import MsgDialog
 from fstimer.gui.util_classes import GtkStockButton
+from fstimer.config import config
+
+import json
+import requests
+from base64 import b64encode
+
+import gettext
+
 
 class RegistrationWin(Gtk.Window):
     '''Handling of the window dedicated to registration'''
@@ -45,10 +54,22 @@ class RegistrationWin(Gtk.Window):
         self.autosave = autosave
         self.editreg_win = None
         self.editregfields = None
-        # First we define the registration model.
+        # First we define the registration model.  entrybox_int
         # We will setup a liststore that is wrapped in a treemodelfilter
         # that is wrapped in a treemodelsort that is put in a treeview
         # that is put in a scrolled window. Eesh.
+        
+        
+        # SH
+        self.trackerapi = config.trackerapi_updaterunner
+        self.username = config.username
+        self.password = config.password
+        userAndPass = b64encode((self.username + ":" + self.password).encode()).decode("ascii")
+        self.authorisation = "Basic %s" % userAndPass
+        self.headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': '*/*', 
+                   "Accept-Encoding": 'gzip, deflate, br', "Authorization":self.authorisation}
+      
+      
         self.regmodel = Gtk.ListStore(*[str for field in self.fields])
         self.modelfilter = self.regmodel.filter_new()
         self.modelfiltersorted = Gtk.TreeModelSort(self.modelfilter)
@@ -60,6 +81,7 @@ class RegistrationWin(Gtk.Window):
             self.treeview.append_column(column)
         # Now we populate the model with the pre-registration info, if any
         for reg in prereg:
+            print(reg)
             self.regmodel.append([reg[field] for field in fields])
             if reg['ID']:
                 self.ids.add(reg['ID'])
@@ -82,7 +104,7 @@ class RegistrationWin(Gtk.Window):
         self.set_size_request(850, 450)
         #Now the filter entrybox
         filterbox = Gtk.HBox(False, 8)
-        filterbox.pack_start(Gtk.Label('Filter by ', True, True, 0), False, False, 0)
+        filterbox.pack_start(Gtk.Label(_('Filter by '), True, True, 0), False, False, 0)
         self.filter_combo = Gtk.ComboBoxText()
         for field in self.fields:
             self.filter_combo.append_text(field)
@@ -116,15 +138,15 @@ class RegistrationWin(Gtk.Window):
         regtable.set_row_spacings(5)
         regtable.set_col_spacings(5)
         regtable.set_border_width(5)
-        btnEDIT = GtkStockButton('edit',"Edit")
+        btnEDIT = GtkStockButton('edit',_("Edit"))
         btnEDIT.connect('clicked', self.edit_clicked)
-        btnREMOVE = GtkStockButton('remove',"Remove")
+        btnREMOVE = GtkStockButton('remove',_("Remove"))
         btnREMOVE.connect('clicked', self.rm_clicked)
-        btnNEW = GtkStockButton('new',"New")
+        btnNEW = GtkStockButton('new',_("New"))
         btnNEW.connect('clicked', self.new_clicked)
-        btnSAVE = GtkStockButton('save',"Save")
+        btnSAVE = GtkStockButton('save',_("Save"))
         btnSAVE.connect('clicked', self.save_clicked)
-        btnOK = GtkStockButton('close',"Close")
+        btnOK = GtkStockButton('close',_("Close"))
         btnOK.connect('clicked', self.close_clicked)
         vsubbox = Gtk.VBox(False, 8)
         vsubbox.pack_start(btnSAVE, False, False, 0)
@@ -201,7 +223,8 @@ class RegistrationWin(Gtk.Window):
         treeiter = selection.get_selected()[1]
         # if nothing is selected, do nothing.
         if treeiter:
-            rmreg_dialog = MsgDialog(self, 'warning', ['yes', 'no'], 'Really delete?', 'Are you sure you want to delete this entry?\nThis cannot be undone.')
+            rmreg_dialog = MsgDialog(self, 'warning', [_('yes'), _('no')], _('Really delete?'), 
+                                     _('Are you sure you want to delete this entry?\nThis cannot be undone.'))
             rmreg_dialog.set_default_response(Gtk.ResponseType.NO)
             response = rmreg_dialog.run()
             rmreg_dialog.destroy()
@@ -241,7 +264,8 @@ class RegistrationWin(Gtk.Window):
     def close_clicked(self, jnk_unused):
         '''Handles click on the 'close' button on the registration window.
            Throws up a 'do you want to save' dialog, and close the window'''
-        okreg_dialog = MsgDialog(self, 'question', ['yes', 'no'], 'Save?', 'Do you want to save before finishing?\nUnsaved data will be lost.')
+        okreg_dialog = MsgDialog(self, 'question', [_('yes'), _('no')], _('Save?'), 
+                                 _('Do you want to save before finishing?\nUnsaved data will be lost.'))
         okreg_dialog.set_default_response(Gtk.ResponseType.YES)
         response = okreg_dialog.run()
         okreg_dialog.destroy()
@@ -263,7 +287,7 @@ class RegistrationWin(Gtk.Window):
         # Define the window
         self.editreg_win = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.editreg_win.modify_bg(Gtk.StateType.NORMAL, fstimer.gui.bgcolor)
-        self.editreg_win.set_title('Registration entry')
+        self.editreg_win.set_title(_('Registration entry'))
         self.editreg_win.set_transient_for(self)
         self.editreg_win.set_modal(True)
         self.editreg_win.set_position(Gtk.WindowPosition.CENTER)
@@ -271,8 +295,8 @@ class RegistrationWin(Gtk.Window):
         self.editreg_win.set_border_width(10)
         #An hbox for the buttons
         editreghbox = Gtk.HBox(False, 8)
-        editregbtnOK = GtkStockButton('ok',"OK")
-        editregbtnCANCEL = GtkStockButton('close',"Cancel")
+        editregbtnOK = GtkStockButton('ok',_("OK"))
+        editregbtnCANCEL = GtkStockButton('close',_("Cancel"))
         editregbtnCANCEL.connect('clicked', lambda b: self.editreg_win.hide())
         editreghbox.pack_start(editregbtnOK, False, False, 5)
         editreghbox.pack_start(editregbtnCANCEL, False, False, 5)
@@ -303,9 +327,14 @@ class RegistrationWin(Gtk.Window):
         # Set up the vbox
         editregvbox = Gtk.VBox(False, 8)
         # We will make a smaller hbox for each of the fields.
+        
+        # editregvbox = Gtk.Grid()
+        # grid.add(button1)
+        # grid.attach(button2, 1, 0, 2, 1)
+        
         hboxes = {}
         for field in self.fields:
-            hboxes[field] = Gtk.HBox(False, 15)
+            hboxes[field] = Gtk.HBox(False, 25)
             hboxes[field].pack_start(Gtk.Label(field+':', True, True, 0), False, False, 0) #Pack the label
             hboxes[field].pack_start(self.editregfields[field], False, False, 0) #Pack the button/entry/..
             if self.projecttype == 'handicap' and field == 'Handicap':
@@ -313,6 +342,10 @@ class RegistrationWin(Gtk.Window):
                 hboxes[field].pack_start(label_hd, False, False, 0)
             if field == 'ID':
                 label_id = Gtk.Label('Must be unique')
+                hboxes[field].pack_start(label_id, False, False, 0)
+            # SH: donation field
+            if field == 'Donation':
+                label_id = Gtk.Label(_('Must be float number'))
                 hboxes[field].pack_start(label_id, False, False, 0)
             editregvbox.pack_start(hboxes[field], False, False, 0) #Pack this hbox into the big vbox.
         #Pack and show
@@ -324,6 +357,20 @@ class RegistrationWin(Gtk.Window):
         self.editreg_win.add(editregvbox)
         self.editreg_win.show_all()
 
+    def submit_runner(self, new_vals):
+        dataDict = {"bib": new_vals['ID'],
+                    "firstname": new_vals['First name'],
+                    "lastname": new_vals['Last name'],
+                    "email": new_vals['Email'],
+                    "donation": new_vals['Donation']
+                    }
+        response = requests.post(self.trackerapi, data=dataDict, headers=self.headers, verify=False)
+        if response.status_code != 200:
+            print("Request not successful (Status " + str(response.status_code) + "; Reason: " + response.reason + ")")
+        else:
+            jsonresponse = json.loads(response.content.decode('utf-8'))
+            print("Runner data submitted for bib " + str(new_vals['ID']) + " (" + jsonresponse['Success'] + ")");
+        
     def validate_entry(self, jnk_unused, treeiter, preregiter, label_hd, label_id):
         '''Handles a click on the 'ok' button of the entry edition window.
            Reads out the input information, and writes the changes to the treemodel'''
@@ -350,6 +397,12 @@ class RegistrationWin(Gtk.Window):
                     new_vals[field] = ''
                 else:
                     new_vals[field] = self.fieldsdic[field]['options'][indx-1]
+        # SH: float input for donation
+        try:
+            float(new_vals['Donation'])
+        except ValueError:
+            label_id.set_markup('<span color="red">{} ' + _('cannot be parsed to float number') + '</span>'.format(new_vals['Donation']))
+            return
         # Make sure we don't have a duplicate ID, unless we are editing and leave it the same.
         if treeiter and new_vals['ID'] == self.prereg[preregiter]['ID']:
             pass  # No need for an ID check, it was already done.
@@ -368,6 +421,11 @@ class RegistrationWin(Gtk.Window):
         else:
             self.regmodel.append([new_vals[field] for field in self.fields])
             self.prereg.append(new_vals)
+        
+        # Send data to REST
+        self.submit_runner(new_vals)
+            
+            
         # Add the new ID to the id store
         if new_vals['ID']:
             self.ids.add(new_vals['ID'])
@@ -380,3 +438,4 @@ class RegistrationWin(Gtk.Window):
             self.save_clicked(None)
         # we're done
         self.editreg_win.hide()
+        

@@ -35,8 +35,10 @@ from fstimer.gui.util_classes import MsgDialog
 from fstimer.gui.util_classes import GtkStockButton
 from fstimer.printer.formatter import print_times, OutputFormat
 from fstimer.time_ops import time_format, time_sum, time_diff
+from fstimer.config import config
 
 import requests
+from base64 import b64encode
 
 class MergeError(Exception):
     '''Exception used in case of merging error'''
@@ -60,12 +62,12 @@ class TimingWin(Gtk.Window):
         self.numlaps = pytimer.numlaps
         # SH: TODO get value from settings (pytimer)
         self.laplength = 6.0
-        self.trackerapi = "http://24hcr.dirtychurchrun.de/add-lap.php"
-        self.username = ""
-        self.password = ""
+        self.trackerapi = config.trackerapi_addlap
+        self.username = config.username
+        self.password = config.password
         userAndPass = b64encode((self.username + ":" + self.password).encode()).decode("ascii")
         self.authorisation = "Basic %s" % userAndPass
-        self.headers = {'Content-type': 'x-www-form-urlencoded', 'Accept': '*/*', 
+        self.headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': '*/*', 
                    "Accept-Encoding": 'gzip, deflate, br', "Authorization":self.authorisation}
         
         self.wineditblocktime = None
@@ -76,42 +78,42 @@ class TimingWin(Gtk.Window):
         self.set_modal(True)
         self.set_title('fsTimer - ' + os.path.basename(self.path))
         self.set_position(Gtk.WindowPosition.CENTER)
-        self.connect('delete_event', lambda b, jnk: self.done_timing(b))
+        self.connect(_('delete_event'), lambda b, jnk: self.done_timing(b))
         self.set_border_width(10)
         self.set_size_request(450, 450)
         # We will put the timing info in a liststore in a scrolledwindow
         self.timemodel = Gtk.ListStore(str, str, str)
         # We will put the liststore in a treeview
         self.timeview = Gtk.TreeView()
-        column = Gtk.TreeViewColumn('ID', Gtk.CellRendererText(), text=0)
+        column = Gtk.TreeViewColumn(_('ID'), Gtk.CellRendererText(), text=0)
         self.timeview.append_column(column)
-        column = Gtk.TreeViewColumn('Time', Gtk.CellRendererText(), text=1)
+        column = Gtk.TreeViewColumn(_('Time'), Gtk.CellRendererText(), text=1)
         self.timeview.append_column(column)
-        column = Gtk.TreeViewColumn('Offset', Gtk.CellRendererText(), text=2)
+        column = Gtk.TreeViewColumn(_('Offset'), Gtk.CellRendererText(), text=2)
         self.timeview.append_column(column)
         #An extra column if it is a handicap race
         if self.projecttype == 'handicap':
             renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn('Corrected Time', renderer)
+            column = Gtk.TreeViewColumn(_('Corrected Time'), renderer)
             column.set_cell_data_func(renderer, self.print_corrected_time)
             self.timeview.append_column(column)
         #Another extra column if it is a lap race
         if self.numlaps > 1:
             renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn('Completed laps', renderer)
+            column = Gtk.TreeViewColumn(_('Completed laps'), renderer)
             column.set_cell_data_func(renderer, self.print_completed_laps)
             self.timeview.append_column(column)
         
         # SH: add total money
         if self.numlaps > 1:
             renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn('Total donation', renderer)
+            column = Gtk.TreeViewColumn(_('Total donation'), renderer)
             column.set_cell_data_func(renderer, self.print_total_donation)
             self.timeview.append_column(column)
         
         # SH: add Name
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn('Name', renderer)
+        column = Gtk.TreeViewColumn(_('Name'), renderer)
         column.set_cell_data_func(renderer, self.print_name)
         self.timeview.append_column(column)
             
@@ -139,7 +141,7 @@ class TimingWin(Gtk.Window):
         tophbox = Gtk.HBox()
         # our default t0, and the stuff on top for setting/edit t0
         self.t0 = 0.
-        btn_t0 = Gtk.Button('Start!')
+        btn_t0 = Gtk.Button(_('Start!'))
         btn_t0.connect('clicked', self.set_t0)
         # time display
         self.clocklabel = Gtk.Label()
@@ -265,7 +267,7 @@ class TimingWin(Gtk.Window):
                 #Donation is present but is not formatted correctly.
                 renderer.set_property('text', 'Error')
         else:
-            renderer.set_property('text', 'Donation NN')
+            renderer.set_property('text', _('Donation NN'))
     
     	# SH: print total donation
     def print_name(self, column, renderer, model, itr, data):
@@ -290,7 +292,7 @@ class TimingWin(Gtk.Window):
 
     def update_racers_label(self):
         '''update values in the racers_label'''
-        s = '%d registrants. Checked in' % self.racers_total
+        s = _('%d registrants. Checked in') % self.racers_total
         if self.numlaps > 1:
             s += ' (per lap)'
         s += ': ' + ' | '.join(str(n) for n in self.racers_in)
@@ -683,10 +685,11 @@ class TimingWin(Gtk.Window):
                 break
 
     def submit_lap(self, ID):
-        dataDict = {"orderid": self.timing[ID]['OrderID'],
-                    "laps": self.lapcounter[ID]}
+        dataDict = {"bib": ID,
+                    "lap": self.lapcounter[ID]}
         response = requests.post(self.trackerapi, data=dataDict, headers=self.headers, verify=False)
         jsonresponse = json.loads(response.content.decode('utf-8'))
+        print("Lap (" + str(self.lapcounter[ID]) + ") submitted for bib " + str(ID) + " (" + jsonresponse['Success'] + ")");
         
     def record_time(self, jnk_unused):
         '''Handles a hit on enter in the entry box.
@@ -696,6 +699,7 @@ class TimingWin(Gtk.Window):
            An ID with the marktime symbol in it will first apply the ID
            and then mark the time.'''
         txt = self.entrybox.get_text()
+         
         timemarks = txt.count(self.timebtn)
         txt = txt.replace(self.timebtn, '')
         # it is actually a result. (or a pass, which we treat as a result)
@@ -723,6 +727,7 @@ class TimingWin(Gtk.Window):
         try:
             self.update_racers(txt)
             self.update_racers_label()
+            self.submit_lap(txt)
         except ValueError:
             pass
         self.entrybox.set_text('')
