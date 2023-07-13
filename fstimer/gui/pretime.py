@@ -44,27 +44,27 @@ class PreTimeWin(Gtk.Window):
         self.connect('delete_event', lambda b, jnk: self.hide())
         self.set_border_width(10)
         # Start with some intro text.
-        btnFILE = Gtk.Button('Choose file')
+        btnFILE = Gtk.Button(_('Choose file'))
         btnFILE.connect('clicked', self.choose_timingdict)
         self.pretimefilelabel = Gtk.Label(label='')
-        self.pretimefilelabel.set_markup('<span color="blue">Select a timing dictionary.</span>')
+        self.pretimefilelabel.set_markup(_('<span color="blue">Select a timing dictionary.</span>'))
         self.entry1 = Gtk.Entry()
         self.entry1.set_max_length(6)
         self.entry1.set_text('0')
-        label2 = Gtk.Label('Specify a "pass" ID, not assigned to any racer')
+        label2 = Gtk.Label(_('Specify a "pass" ID, not assigned to any racer'))
         self.timebtncombobox = Gtk.ComboBoxText()
         self.timebtnlist = [' ', '.', '/']
-        timebtndescr = ['Spacebar (" ")', 'Period (".")', 'Forward slash ("/")']
+        timebtndescr = [_('Spacebar (" ")'), _('Period (".")'), _('Forward slash ("/")')]
         for descr in timebtndescr:
           self.timebtncombobox.append_text(descr)
         self.timebtncombobox.set_active(0)
-        label3 = Gtk.Label(label='Specify the key for marking times. It must not be in any of the IDs.')
+        label3 = Gtk.Label(label=_('Specify the key for marking times. It must not be in any of the IDs.'))
         hbox3 = Gtk.HBox(False, 10)
         hbox3.pack_start(self.timebtncombobox, False, False, 8)
         hbox3.pack_start(label3, False, False, 8)
-        btnCANCEL = GtkStockButton('close',"Close")
+        btnCANCEL = GtkStockButton('close',_("Close"))
         btnCANCEL.connect('clicked', lambda b: self.hide())
-        pretimebtnOK = GtkStockButton('ok',"OK")
+        pretimebtnOK = GtkStockButton('ok',_("OK"))
         pretimebtnOK.connect('clicked', self.okclicked)
         btmhbox = Gtk.HBox(False, 8)
         btmhbox.pack_start(pretimebtnOK, False, False, 8)
@@ -88,10 +88,10 @@ class PreTimeWin(Gtk.Window):
     def choose_timingdict(self, jnk_unused):
         '''Handles click on Choose file button
            Converts the selected file into a defaultdict'''
-        chooser = Gtk.FileChooserDialog(title='Choose timing dictionary', parent=self, action=Gtk.FileChooserAction.OPEN, buttons=('Cancel', Gtk.ResponseType.CANCEL, 'OK', Gtk.ResponseType.OK))
+        chooser = Gtk.FileChooserDialog(title=_('Choose timing dictionary'), parent=self, action=Gtk.FileChooserAction.OPEN, buttons=('Cancel', Gtk.ResponseType.CANCEL, 'OK', Gtk.ResponseType.OK))
         chooser.set_current_folder(self.path)
         ffilter = Gtk.FileFilter()
-        ffilter.set_name('Timing dictionaries')
+        ffilter.set_name(_('Timing dictionaries'))
         ffilter.add_pattern('*_timing_dict.json')
         chooser.add_filter(ffilter)
         response = chooser.run()

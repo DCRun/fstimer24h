@@ -152,7 +152,7 @@ class TimingWin(Gtk.Window):
         timevbox1 = Gtk.VBox(False, 8)
         timevbox1.pack_start(tophbox, False, False, 0)
         timevbox1.pack_start(timealgn, True, True, 0)
-        timevbox1.pack_start(Gtk.Label('Select box below in order to mark times:'), False, False, 0)
+        timevbox1.pack_start(Gtk.Label(_('Select box below in order to mark times:')), False, False, 0)
         timevbox1.pack_start(self.entrybox, False, False, 0)
         # we will keep track of how many racers are still out.
         self.racers_reg = []
@@ -169,44 +169,44 @@ class TimingWin(Gtk.Window):
         # buttons on the right side
         #First an options button that will actually be a menu
         options_menu = Gtk.Menu()
-        menu_editreg = Gtk.MenuItem('Edit registration data')
+        menu_editreg = Gtk.MenuItem(_('Edit registration data'))
         menu_editreg.connect_object("activate", self.edit_reg, None)
         menu_editreg.show()
         options_menu.append(menu_editreg)
-        menu_resett0 = Gtk.MenuItem('Restart clock')
+        menu_resett0 = Gtk.MenuItem(_('Restart clock'))
         menu_resett0.connect_object("activate", self.restart_t0, None)
         menu_resett0.show()
         options_menu.append(menu_resett0)
-        menu_editt0 = Gtk.MenuItem('Edit starting time')
+        menu_editt0 = Gtk.MenuItem(_('Edit starting time'))
         menu_editt0.connect_object("activate", self.edit_t0, None)
         menu_editt0.show()
         options_menu.append(menu_editt0)
-        menu_savecsv = Gtk.MenuItem('Save results to CSV')
+        menu_savecsv = Gtk.MenuItem(_('Save results to CSV'))
         menu_savecsv.connect_object("activate", self.print_csv, pytimer)
         menu_savecsv.show()
         options_menu.append(menu_savecsv)
-        menu_saveexcel = Gtk.MenuItem('Save results to EXCEL')
+        menu_saveexcel = Gtk.MenuItem(_('Save results to EXCEL'))
         menu_saveexcel.connect_object("activate", self.print_excel, pytimer)
         menu_saveexcel.show()
         options_menu.append(menu_saveexcel)
-        menu_resume = Gtk.MenuItem('Load saved timing session')
+        menu_resume = Gtk.MenuItem(_('Load saved timing session'))
         menu_resume.connect_object("activate", self.resume_times, None, False) #False is for not merging
         menu_resume.show()
         options_menu.append(menu_resume)
-        menu_merge = Gtk.MenuItem('Merge in saved IDs or times')
+        menu_merge = Gtk.MenuItem(_('Merge in saved IDs or times'))
         menu_merge.connect_object("activate", self.resume_times, None, True) #True is for merging
         menu_merge.show()
         options_menu.append(menu_merge)
-        btnOPTIONS = Gtk.Button('Options')
+        btnOPTIONS = Gtk.Button(_('Options'))
         btnOPTIONS.connect_object("event", self.options_btn, options_menu)
         options_align = Gtk.Alignment.new(1, 0.1, 1, 0)
         options_align.add(btnOPTIONS)
         #Then the block of editing buttons
-        btnDROPID = Gtk.Button('Drop ID')
+        btnDROPID = Gtk.Button(_('Drop ID'))
         btnDROPID.connect('clicked', self.timing_rm_ID)
-        btnDROPTIME = Gtk.Button('Drop time')
+        btnDROPTIME = Gtk.Button(_('Drop time'))
         btnDROPTIME.connect('clicked', self.timing_rm_time)
-        btnEDIT = GtkStockButton('edit',"Edit")
+        btnEDIT = GtkStockButton('edit',_("Edit"))
         btnEDIT.connect('clicked', self.edit_time)
         edit_vbox = Gtk.VBox(True, 8)
         edit_vbox.pack_start(btnDROPID, False, False, 0)
@@ -215,9 +215,9 @@ class TimingWin(Gtk.Window):
         edit_align = Gtk.Alignment.new(1, 0, 1, 0)
         edit_align.add(edit_vbox)
         #Then the print and save buttons
-        btnPRINT = Gtk.Button('Printouts')
+        btnPRINT = Gtk.Button(_('Printouts'))
         btnPRINT.connect('clicked', self.print_html, pytimer)
-        btnSAVE = GtkStockButton('save',"Save")
+        btnSAVE = GtkStockButton('save',_("Save"))
         btnSAVE.connect('clicked', self.save_times)
         save_vbox = Gtk.VBox(True, 8)
         save_vbox.pack_start(btnPRINT, False, False, 0)
@@ -225,7 +225,7 @@ class TimingWin(Gtk.Window):
         save_align = Gtk.Alignment.new(1, 1, 1, 0)
         save_align.add(save_vbox)
         #And finally the finish button
-        btnOK = GtkStockButton('close',"Close")
+        btnOK = GtkStockButton('close',_("Close"))
         btnOK.connect('clicked', self.done_timing)
         done_align = Gtk.Alignment.new(1, 0.7, 1, 0)
         done_align.add(btnOK)
@@ -326,8 +326,8 @@ class TimingWin(Gtk.Window):
 
     def restart_t0(self, jnk_unused):
         '''Handles click on restart clock button'''
-        restart_t0_dialog = MsgDialog(self, 'warning', ['yes', 'no'], 'Are you sure?', 
-                                      'Are you sure you want to restart the race clock?\nThis cannot be undone.')
+        restart_t0_dialog = MsgDialog(self, 'warning', ['yes', 'no'], _('Are you sure?'), 
+                                      _('Are you sure you want to restart the race clock?\nThis cannot be undone.'))
         restart_t0_dialog.set_default_response(Gtk.ResponseType.NO)
         response = restart_t0_dialog.run()
         restart_t0_dialog.destroy()
@@ -400,7 +400,7 @@ class TimingWin(Gtk.Window):
         '''Handled result of the editing of a given time'''
         row = self.timemodel.get_path(treeiter)[0]
         if not re.match('^[0-9:.]*$', new_time):
-            md = MsgDialog(self, 'error', ['ok'], 'Error!', 'Time is not valid format.')
+            md = MsgDialog(self, 'error', ['ok'], _('Error!'), _('Time is not valid format.'))
             md.run()
             md.destroy()
             return
@@ -521,7 +521,7 @@ class TimingWin(Gtk.Window):
             if ididx >= 0:
                 # Otherwise, there is no ID here so there is nothing to do.
                 # Ask if we are sure.
-                rmID_dialog = MsgDialog(self, 'warning', ['yes', 'no'], 'Are you sure?', 'Are you sure you want to drop this ID and shift all later IDs down earlier in the list?\nThis cannot be undone.')
+                rmID_dialog = MsgDialog(self, 'warning', ['yes', 'no'], _('Are you sure?'), _('Are you sure you want to drop this ID and shift all later IDs down earlier in the list?\nThis cannot be undone.'))
                 rmID_dialog.set_default_response(Gtk.ResponseType.NO)
                 response = rmID_dialog.run()
                 rmID_dialog.destroy()
@@ -565,7 +565,8 @@ class TimingWin(Gtk.Window):
             if timeidx >= 0:
                 # Otherwise, there is no time here so there is nothing to do.
                 # Ask if we are sure.
-                rmtime_dialog = MsgDialog(self, 'warning', ['yes', 'no'], 'Are you sure?', 'Are you sure you want to drop this time and shift all later times down earlier in the list?\nThis cannot be undone.')
+                rmtime_dialog = MsgDialog(self, 'warning', ['yes', 'no'], _('Are you sure?'), 
+                                          _('Are you sure you want to drop this time and shift all later times down earlier in the list?\nThis cannot be undone.'))
                 rmtime_dialog.set_default_response(Gtk.ResponseType.NO)
                 response = rmtime_dialog.run()
                 rmtime_dialog.destroy()
@@ -590,12 +591,14 @@ class TimingWin(Gtk.Window):
                         treeiter = self.timemodel.get_iter((rowcounter,))
                         self.timemodel.remove(treeiter)
 
+    # TODO SH translate
     def resume_times(self, jnk_unused, isMerge):
         '''Handles click on Resume button'''
-        chooser = Gtk.FileChooserDialog(title='Choose timing results to resume', parent=self, action=Gtk.FileChooserAction.OPEN, buttons=('Cancel', Gtk.ResponseType.CANCEL, 'OK', Gtk.ResponseType.OK))
+        chooser = Gtk.FileChooserDialog(title=_('Choose timing results to resume'), parent=self, action=Gtk.FileChooserAction.OPEN, buttons=(_('Cancel'), Gtk.ResponseType.CANCEL, _('OK'),
+                                                                                                                                             Gtk.ResponseType.OK))
         chooser.set_current_folder(self.path)
         ffilter = Gtk.FileFilter()
-        ffilter.set_name('Timing results')
+        ffilter.set_name(_('Timing results'))
         ffilter.add_pattern('*_times.json')
         chooser.add_filter(ffilter)
         response = chooser.run()

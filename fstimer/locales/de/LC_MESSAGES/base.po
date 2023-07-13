@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-07-09 21:00+0200\n"
-"PO-Revision-Date: 2023-07-07 13:10+0200\n"
+"POT-Creation-Date: 2023-07-08 01:00+0200\n"
+"PO-Revision-Date: 2023-07-08 01:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -18,54 +18,481 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: gui/hello_world.py:10
-msgid "Hello World!"
-msgstr "Hallo Welt!"
+#: gui/editt0.py:41
+msgid ""
+"This is the starting time in seconds.            \n"
+"Add or subtract seconds from this number to adjust the start time by that "
+"many seconds.            \n"
+"Note that this will NOT affect times that have already been marked, only "
+"future times."
+msgstr ""
+"Dies ist die Anfangszeit in Sekunden            \n"
+"Addiere oder subtrahiere Sekunden, um die Startzeit anzupassen.            \n"
+"Beachte, dass die keine Zeiten verändert, die bereits gespeichert wurden."
 
-#: gui/hello_world.py:11
-msgid "Localization is fun!"
-msgstr "Übersetzen macht Spaß!"
+#: gui/editt0.py:49
+msgid "Set time of day"
+msgstr "Setze Tageszeit als Laufzeit"
+
+#: gui/editt0.py:54 gui/edittime.py:59 gui/register.py:299 gui/timing.py:599
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: gui/edittime.py:37
+msgid "fsTimer - Edit time"
+msgstr "fsTimer - Zeit editieren"
+
+#: gui/edittime.py:42
+msgid ""
+"<span color=\"red\">WARNING: Changes to these values cannot be automatically "
+"undone</span>\n"
+"If you change the time and forget the old one, it will be gone forever."
+msgstr ""
+"<span color=\"red\">WARNUNG: Änderungen an diesen Werten können nicht "
+"automatisch rückgängig gemacht werden!</span>\n"
+"Wird die Zeit verändert und vergessen, ist der Wert für immer verschwunden."
+
+#: gui/edittime.py:50
+msgid "Time:"
+msgstr "Zeit:"
+
+#: gui/edittime.py:57 gui/importprereg.py:89 gui/pretime.py:67
+#: gui/register.py:298 gui/timing.py:599
+msgid "OK"
+msgstr "OK"
+
+#: gui/importprereg.py:61
+msgid ""
+"Select a pre-registration csv or Excel file to import.\n"
+"\n"
+"If the spreadsheet has accented or non-Latin characters, it must be in "
+"utf-8,\n"
+"see Section 2.2 of the documentation for instructions."
+msgstr ""
+"Wähle eine CSV- oder Excel-Vor-Registierungsdatei zum Import.\n"
+"\n"
+"Wenn die Datei Akzente oder Umlaute enthält, muss sie in UTF-8 kodiert "
+"sein,\n"
+"Siehe Abschnitt 2.2. der Dokumentation für eine Anleitung."
+
+#: gui/importprereg.py:65
+msgid "Open"
+msgstr "Öffnen"
+
+#: gui/importprereg.py:111
+msgid "fsTimer - EXCEL import"
+msgstr "fsTimer - Excel Import"
+
+#: gui/importprereg.py:113
+msgid "fsTimer - CSV import"
+msgstr "fsTimer - CSV Import"
+
+#: gui/importprereg.py:120
+msgid "For each field, specify the corresponding EXCEL column.\n"
+msgstr "Gib für jedes Feld die zugehörige Excel-Spalte an.\n"
+
+#: gui/importprereg.py:122
+msgid "For each field, specify the corresponding CSV column.\n"
+msgstr "Gib für jedes Feld die zugehörige CSV-Spalte an.\n"
 
 #: gui/intro.py:50
 msgid "Select an existing project, or begin a new project."
 msgstr "Wähle ein existierendes Projekt, oder beginne ein neues."
 
-#: gui/register.py:322
-msgid "Must be float number"
-msgstr "Das muss eine Gleitkommazahl mit Punkt (.) statt Komma sein"
+#: gui/intro.py:53
+msgid " -- Select an existing project --"
+msgstr " -- Wähle ein existierendes Projekt --"
 
-#: gui/register.py:364
-msgid "cannot be parsed to float number"
-msgstr "Kann nicht als Gleitkommazahl mit Punkt (.) statt Komma gelesen werden"
+#: gui/intro.py:63 gui/printfields.py:125 gui/register.py:145
+msgid "New"
+msgstr "Neu"
 
-#: gui/root.py:51
-msgid "Menu"
-msgstr "Menü"
+#: gui/intro.py:70 gui/pretime.py:65 gui/printfields.py:137 gui/register.py:149
+#: gui/timing.py:230
+msgid "Close"
+msgstr "Schließen"
 
-#: gui/root.py:76
-msgid "Import registration info from spreadsheet."
-msgstr "Teilnehmerdaten aus Tabelle importieren."
+#: gui/preregister.py:48
+msgid ""
+"Give a unique number to each computer used for registration.\n"
+"Select a pre-registration file, if available."
+msgstr ""
+"Gib jedem Computer, der bei der Registrierung verwendet wird, eine "
+"eindeutige Nummer.\n"
+"Wähle eine Vor-Registierungsdatei, falls verfügbar."
 
-#: gui/root.py:77
-msgid "Register"
-msgstr "Registrierung"
+#: gui/preregister.py:58
+msgid "This computer's registration number"
+msgstr "Die Registrierungsnummer dieses Computers"
 
-#: gui/root.py:81
-msgid "Register racer information and assign ID numbers."
-msgstr "Registriere Teilnehmerdaten und weise Startnummern zu."
+#: gui/preregister.py:59
+msgid "Select pre-registration"
+msgstr "Wähle die Vor-Registierung"
 
-#: gui/root.py:82
-msgid "Compile"
-msgstr "Zusammenführen"
+#: gui/preregister.py:85
+msgid "Select pre-registration file"
+msgstr "Wähle die Vorregistrierungsdatei aus"
 
-#: gui/root.py:86
-msgid "Compile registration file(s)"
-msgstr "Führe Teilnehmerdatendateien zusammen"
+#: gui/preregister.py:87
+msgid "Registration files"
+msgstr "Registierungsdatendatei"
 
-#: gui/root.py:87
+#: gui/preregister.py:109
+msgid "ok"
+msgstr "OK"
+
+#: gui/preregister.py:109
+msgid "cancel"
+msgstr "Abbrechen"
+
+#: gui/preregister.py:109
+msgid "Proceed?"
+msgstr "Fortfahren?"
+
+#: gui/preregister.py:109
+msgid ""
+"A file with this registration number already exists.\n"
+"If you continue it will be overwritten!"
+msgstr ""
+"Eine Datei mit dieser Registierungsnummer exisitiert bereist.\n"
+"Beim Fortfahren wird diese überschrieben!"
+
+#: gui/pretime.py:47
+msgid "Choose file"
+msgstr "Dateiauswahl"
+
+#: gui/pretime.py:50
+msgid "<span color=\"blue\">Select a timing dictionary.</span>"
+msgstr "<span color=\"blue\">Wähle eine Zeitendatei aus.</span>"
+
+#: gui/pretime.py:54
+msgid "Specify a \"pass\" ID, not assigned to any racer"
+msgstr ""
+"Gib ein Startnummer als \"pass\" ID an, die keiner Läuferin und keinem "
+"Läufer zugeordnet ist"
+
+#: gui/pretime.py:57
+msgid "Spacebar (\" \")"
+msgstr "Leertaste (\" \")"
+
+#: gui/pretime.py:57
+msgid "Period (\".\")"
+msgstr "Punkt (\".\")"
+
+#: gui/pretime.py:57
+msgid "Forward slash (\"/\")"
+msgstr "Schrägstrich (\"/\")"
+
+#: gui/pretime.py:61
+msgid "Specify the key for marking times. It must not be in any of the IDs."
+msgstr ""
+"Gibt die Taste an, mit der Zeiten genommen werden. Sie darf keiner "
+"Startnummer entsprechen."
+
+#: gui/pretime.py:91
+msgid "Choose timing dictionary"
+msgstr "Wähle die Zeitnahmedatei"
+
+#: gui/pretime.py:94
+msgid "Timing dictionaries"
+msgstr "Zeitnahmedateien"
+
+#: gui/printfields.py:40
+msgid "fsTimer - Choose results fields"
+msgstr "fsTimer - Wähle Ergebnisfelder"
+
+#: gui/printfields.py:51
+msgid ""
+"Choose the fields to show on the results printout.\n"
+"Press 'Forward' to continue with the default settings, or make edits below.\n"
+msgstr ""
+"Wähle die Felder zur Anzeige im Ergebnisdruck.\n"
+"Drücke \"Vorwärts\", um mit den Standardeinstellungen fortzufahren, oder "
+"mache unten Anpassungen.\n"
+
+#: gui/printfields.py:71
+msgid "<b>Computed results</b>"
+msgstr "<b>Berechnete Ergebnisse</b>"
+
+#: gui/printfields.py:73 gui/root.py:85 gui/timing.py:92
 msgid "Time"
 msgstr "Zeitnahme"
 
-#: gui/root.py:91
+#: gui/printfields.py:77
+msgid "Pace"
+msgstr "Geschwindigkeit"
+
+#: gui/printfields.py:78
+msgid "     Distance:"
+msgstr "     Distanz:"
+
+#: gui/printfields.py:92
+#, python-brace-format
+msgid ""
+"\n"
+"Custom expressions ({Time} is in seconds):"
+msgstr ""
+"\n"
+"Benutzerdefinierte Werte ({Time} in Sekunden):"
+
+#: gui/printfields.py:122 gui/register.py:143
+msgid "Remove"
+msgstr "Löschen"
+
+#: gui/printfields.py:141
+msgid "Back"
+msgstr "Zurück"
+
+#: gui/printfields.py:143
+msgid "Next"
+msgstr "Vorwärts"
+
+#: gui/register.py:107
+msgid "Filter by "
+msgstr "Filtern nach "
+
+#: gui/register.py:141 gui/timing.py:211
+msgid "Edit"
+msgstr "Editieren"
+
+#: gui/register.py:147 gui/timing.py:222
+msgid "Save"
+msgstr "Speichern"
+
+#: gui/register.py:226
+msgid "yes"
+msgstr "ja"
+
+#: gui/register.py:226
+msgid "no"
+msgstr "nein"
+
+#: gui/register.py:226
+msgid "Really delete?"
+msgstr "Wirklich löschen?"
+
+#: gui/register.py:227
+msgid ""
+"Are you sure you want to delete this entry?\n"
+"This cannot be undone."
+msgstr ""
+"Bist Du sicher, diesen Eintrag zu löschen?\n"
+"Der Vorgang kann nicht rückgängig gemacht werden."
+
+#: gui/register.py:267
+msgid "Save?"
+msgstr "Speichern?"
+
+#: gui/register.py:268
+msgid ""
+"Do you want to save before finishing?\n"
+"Unsaved data will be lost."
+msgstr ""
+"Möchtest Du vor dem Beenden speichern?\n"
+"Ungespeicherte Daten gehen sonst verloren."
+
+#: gui/register.py:290
+msgid "Registration entry"
+msgstr "Registrierungseintrag"
+
+#: gui/register.py:344
+msgid "Must be unique"
+msgstr "Darf nur einmal vorkommen"
+
+#: gui/register.py:349
+msgid "Must be float number"
+msgstr "Das muss eine Gleitkommazahl mit Punkt (.) statt Komma sein"
+
+#: gui/register.py:405
+msgid "cannot be parsed to float number"
+msgstr "Kann nicht als Gleitkommazahl mit Punkt (.) statt Komma gelesen werden"
+
+#: gui/root.py:49
+msgid "Menu"
+msgstr "Menü"
+
+#: gui/root.py:51
+msgid "Edit project settings"
+msgstr "Editiere die Projekteinstellungen"
+
+#: gui/root.py:53
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: gui/root.py:55
+msgid "About"
+msgstr "Über"
+
+#: gui/root.py:74
+msgid "Import registration info from spreadsheet."
+msgstr "Teilnehmerdaten aus Tabelle importieren."
+
+#: gui/root.py:75
+msgid "Register"
+msgstr "Registrierung"
+
+#: gui/root.py:79
+msgid "Register racer information and assign ID numbers."
+msgstr "Registriere Teilnehmerdaten und weise Startnummern zu."
+
+#: gui/root.py:80
+msgid "Compile"
+msgstr "Zusammenführen"
+
+#: gui/root.py:84
+msgid "Compile registration file(s)"
+msgstr "Führe Teilnehmerdatendateien zusammen"
+
+#: gui/root.py:89
 msgid "Record race times on the day of the race."
 msgstr "Nehme Zeiten während des Rennens auf."
+
+#: gui/root.py:101
+msgid "Quit"
+msgstr "Beenden"
+
+#: gui/timing.py:83
+msgid "delete_event"
+msgstr "delete_event"
+
+#: gui/timing.py:90
+msgid "ID"
+msgstr "Startnummer"
+
+#: gui/timing.py:94
+msgid "Offset"
+msgstr "Offset"
+
+#: gui/timing.py:99
+msgid "Corrected Time"
+msgstr "Korrigierte Zeit"
+
+#: gui/timing.py:105
+msgid "Completed laps"
+msgstr "Zurückgelegte Runden"
+
+#: gui/timing.py:112
+msgid "Total donation"
+msgstr "Gesamtspenden"
+
+#: gui/timing.py:118
+msgid "Name"
+msgstr "Name"
+
+#: gui/timing.py:146
+msgid "Start!"
+msgstr "Start!"
+
+#: gui/timing.py:157
+msgid "Select box below in order to mark times:"
+msgstr "Schreibe die Startnummer in die nachfolgede Box:"
+
+#: gui/timing.py:174
+msgid "Edit registration data"
+msgstr "Registrierungen anpassen"
+
+#: gui/timing.py:178
+msgid "Restart clock"
+msgstr "Uhr neustarten"
+
+#: gui/timing.py:182
+msgid "Edit starting time"
+msgstr "Startzeit anpassen"
+
+#: gui/timing.py:186
+msgid "Save results to CSV"
+msgstr "Ergebnisse als CSV Datei speichern"
+
+#: gui/timing.py:190
+msgid "Save results to EXCEL"
+msgstr "Ergebnisse als Excel-Datei speichern"
+
+#: gui/timing.py:194
+msgid "Load saved timing session"
+msgstr "Gesicherte Zeitmessung laden"
+
+#: gui/timing.py:198
+msgid "Merge in saved IDs or times"
+msgstr "Gesicherte Startnummern oder Zeiten importieren"
+
+#: gui/timing.py:202
+msgid "Options"
+msgstr "Optionen"
+
+#: gui/timing.py:207
+msgid "Drop ID"
+msgstr "Startnummer löschen"
+
+#: gui/timing.py:209
+msgid "Drop time"
+msgstr "Zeit löschen"
+
+#: gui/timing.py:220
+msgid "Printouts"
+msgstr "Ausdrucke"
+
+#: gui/timing.py:272
+msgid "Donation NN"
+msgstr "Spenden NN"
+
+#: gui/timing.py:297
+#, python-format
+msgid "%d registrants. Checked in"
+msgstr "%d Registrierte. Eingecheckt"
+
+#: gui/timing.py:331 gui/timing.py:526 gui/timing.py:570
+msgid "Are you sure?"
+msgstr "Bist Du Dir wirklich wirklich sicher?"
+
+#: gui/timing.py:332
+msgid ""
+"Are you sure you want to restart the race clock?\n"
+"This cannot be undone."
+msgstr ""
+"Bist Du sicher, die Zeitnahme neuzustarten?\n"
+"Der Vorgang kann nicht rückgängig gemacht werden."
+
+#: gui/timing.py:405
+msgid "Error!"
+msgstr "Fehler!"
+
+#: gui/timing.py:405
+msgid "Time is not valid format."
+msgstr "Die Zeitangabe ist nicht zulässig."
+
+#: gui/timing.py:526
+msgid ""
+"Are you sure you want to drop this ID and shift all later IDs down earlier "
+"in the list?\n"
+"This cannot be undone."
+msgstr ""
+"Bist Du sicher, diese Startnummer zu löschen und alle nachfolgenden "
+"Startnummern nach unten zu schieben?\n"
+"Der Vorgang kann nicht rückgängig gemacht werden."
+
+#: gui/timing.py:571
+msgid ""
+"Are you sure you want to drop this time and shift all later times down "
+"earlier in the list?\n"
+"This cannot be undone."
+msgstr ""
+"Bist Du sicher, diese Zeit zu löschen und alle nachfolgenden Zeiten nach "
+"unten zu schieben?\n"
+"Der Vorgang kann nicht rückgängig gemacht werden."
+
+#: gui/timing.py:599
+msgid "Choose timing results to resume"
+msgstr "Wähle Zeitnahmeergebnisse, um fortzufahren"
+
+#: gui/timing.py:603
+msgid "Timing results"
+msgstr "Zeitnahmeergebnisse"
+
+#~ msgid "close"
+#~ msgstr "Schließen"
+
+#~ msgid "Hello World!"
+#~ msgstr "Hallo Welt!"
+
+#~ msgid "Localization is fun!"
+#~ msgstr "Übersetzen macht Spaß!"

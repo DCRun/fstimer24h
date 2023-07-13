@@ -98,7 +98,7 @@ class RootWin(Gtk.Window):
         rootframe.add(roottable)
         ### Buttons
         roothbox = Gtk.HBox(True, 0)
-        rootbtnQUIT = GtkStockButton(_('close'),_("Quit"))
+        rootbtnQUIT = GtkStockButton('close',_("Quit"))
         rootbtnQUIT.connect('clicked', Gtk.main_quit)
         roothbox.pack_start(rootbtnQUIT, False, False, 5)
         #Vbox

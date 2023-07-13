@@ -223,7 +223,7 @@ class RegistrationWin(Gtk.Window):
         treeiter = selection.get_selected()[1]
         # if nothing is selected, do nothing.
         if treeiter:
-            rmreg_dialog = MsgDialog(self, 'warning', [_('yes'), _('no')], _('Really delete?'), 
+            rmreg_dialog = MsgDialog(self, 'warning', ['yes', 'no'], _('Really delete?'), 
                                      _('Are you sure you want to delete this entry?\nThis cannot be undone.'))
             rmreg_dialog.set_default_response(Gtk.ResponseType.NO)
             response = rmreg_dialog.run()
@@ -264,7 +264,7 @@ class RegistrationWin(Gtk.Window):
     def close_clicked(self, jnk_unused):
         '''Handles click on the 'close' button on the registration window.
            Throws up a 'do you want to save' dialog, and close the window'''
-        okreg_dialog = MsgDialog(self, 'question', [_('yes'), _('no')], _('Save?'), 
+        okreg_dialog = MsgDialog(self, 'question', ['yes', 'no'], _('Save?'), 
                                  _('Do you want to save before finishing?\nUnsaved data will be lost.'))
         okreg_dialog.set_default_response(Gtk.ResponseType.YES)
         response = okreg_dialog.run()
@@ -341,7 +341,8 @@ class RegistrationWin(Gtk.Window):
                 label_hd = Gtk.Label(label='hh:mm:ss')
                 hboxes[field].pack_start(label_hd, False, False, 0)
             if field == 'ID':
-                label_id = Gtk.Label('Must be unique')
+                label_id = Gtk.Label(_('Must be unique'))
+                self.editregfields[field].set_text(str(int(max([int(item) for item in self.ids])) + 1))
                 hboxes[field].pack_start(label_id, False, False, 0)
             # SH: donation field
             if field == 'Donation':

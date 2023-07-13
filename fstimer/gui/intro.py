@@ -50,7 +50,7 @@ class IntroWin(Gtk.Window):
         label = Gtk.Label(_('Select an existing project, or begin a new project.'))
         # A combobox to select the project
         combobox = Gtk.ComboBoxText()
-        projectlist = [' -- Select an existing project --']
+        projectlist = [_(' -- Select an existing project --')]
         rootdir = normpath(join(dirname(abspath(__file__)),'../../'))
         projectlist.extend([i for i in os.listdir(rootdir) if os.path.isdir(join(rootdir,i)) and os.path.exists(join(rootdir,i+'/'+i+'.reg'))]) #List the folders in pwd that contain a .reg registration file
         projectlist.sort()
@@ -60,14 +60,14 @@ class IntroWin(Gtk.Window):
         #An hbox for the buttons.
         hbox = Gtk.HBox(False, 0)
         #And build the buttons
-        btnNEW = GtkStockButton('new','New')
+        btnNEW = GtkStockButton('new',_('New'))
         btnNEW.connect('clicked', create_project_cb)
         btnOK = GtkStockButton('ok','OK')
         btnOK.connect('clicked', load_project_cb, combobox, projectlist)
         btnOK.set_sensitive(False)
         #Set combobox to lock btnOK, so we can't press OK until we have selected a project
         combobox.connect('changed', self.lock_btnOK, combobox, btnOK)
-        btnCANCEL = GtkStockButton('close','Close')
+        btnCANCEL = GtkStockButton('close',_('Close'))
         btnCANCEL.connect('clicked', Gtk.main_quit)
         #Now fill the hbox.
         hbox.pack_start(btnCANCEL, True, True, 0)

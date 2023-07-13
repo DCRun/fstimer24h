@@ -47,6 +47,7 @@ icon_files = {'new': 'actions/document-new.png',
               'warning': 'status/dialog-warning.png',
               'help': 'actions/help-faq.png',
               'about': 'actions/help-about.png',
+              'tod': 'emblems/emblem-default.png',
               }
 
 dialog_buttons = {'ok': ('ok', 'OK', Gtk.ResponseType.OK),

@@ -22,6 +22,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import fstimer.gui
 import os
+import datetime
 from fstimer.gui.util_classes import GtkStockButton
 
 class EditT0Win(Gtk.Window):
@@ -37,16 +38,22 @@ class EditT0Win(Gtk.Window):
         self.set_transient_for(parent)
         self.set_modal(True)
         self.connect('delete_event', lambda b, jnk: self.hide())
-        label = Gtk.Label("""This is the starting time in seconds.\
+        label = Gtk.Label(_("""This is the starting time in seconds.\
             \nAdd or subtract seconds from this number to adjust the start time by that many seconds.\
-            \nNote that this will NOT affect times that have already been marked, only future times.""")
+            \nNote that this will NOT affect times that have already been marked, only future times."""))
         self.t0box = Gtk.Entry()
         self.t0box.set_text(str(t0))
+        
         hbox = Gtk.HBox(False, 8)
+        
+        btnToD = GtkStockButton('tod',_("Set time of day"))
+        btnToD.connect('clicked', self.todclicked)
+        
         btnOK = GtkStockButton('ok',"OK")
         btnOK.connect('clicked', self.okclicked)
-        btnCANCEL = GtkStockButton('close',"Cancel")
+        btnCANCEL = GtkStockButton('close',_("Cancel"))
         btnCANCEL.connect('clicked', lambda jnk: self.hide())
+        hbox.pack_start(btnToD, False, False, 0)
         hbox.pack_start(btnOK, False, False, 0)
         hbox.pack_start(btnCANCEL, False, False, 0)
         hbox_lbl = Gtk.HBox(False, 0)
@@ -57,6 +64,9 @@ class EditT0Win(Gtk.Window):
         vbox.pack_start(hbox, False, False, 0)
         self.add(vbox)
         self.show_all()
+        
+    def todclicked(self, jnk_unused):
+        self.t0box.set_text(datetime.datetime.now().date().strftime("%s"))
 
     def okclicked(self, jnk_unused):
         '''Handles click on OK button'''
